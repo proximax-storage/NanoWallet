@@ -84,13 +84,13 @@ tt {
   @extend %tableDisplay;
 }
 .table-hover>tbody>tr:hover {
-  background-color: $blueXLite;
+  background-color: #009688a6 !important;
 }
 .table-bordered {
   border: 0;
 }
 .accordion-inner {
-  background-color: $blueXLite !important;
+  background-color: #009688a6 !important;
   hr {
     border-style: none !important;
     border: 1px solid $grayLite !important;

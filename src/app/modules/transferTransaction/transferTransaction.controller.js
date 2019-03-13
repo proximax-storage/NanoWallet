@@ -39,7 +39,7 @@ class TransferTransactionCtrl {
         // Set first multisig account if any
         this.formData.multisigAccount = this._DataStore.account.metaData.meta.cosignatoryOf.length == 0 ? '' : this._DataStore.account.metaData.meta.cosignatoryOf[0];
         // Switch between mosaic transfer and normal transfers
-        this.isMosaicTransfer = false;
+        this.isMosaicTransfer = true;
         // Selected mosaic
         this.selectedMosaic = "nem:xem";
         // Mosaics data for current account
@@ -151,10 +151,28 @@ class TransferTransactionCtrl {
         this.setMosaicTransfer();
         // Get current account
         let acct = this.formData.isMultisig ? this.formData.multisigAccount.address : this._Wallet.currentAccount.address;
+
         // Set current account mosaics names and data, if account owns any
         this.currentAccountMosaicData = undefined !== this._DataStore.mosaic.ownedBy[acct] ? this._DataStore.mosaic.ownedBy[acct]: "";
-        // Default selected is nem:xem
-        this.selectedMosaic = "nem:xem";
+
+        if ('prx:xpx' in this.currentAccountMosaicData) {
+            const element = this.currentAccountMosaicData['prx:xpx'];
+            this.currentAccountMosaicData = {
+                'prx:xpx': element
+            }
+        } else {
+            this.currentAccountMosaicData = {
+                'prx:xpx': {
+                    mosaicId: {
+                        name: "xpx",
+                        namespaceId: "prx"
+                    }
+                }
+            }
+        }
+        
+        // Default selected is prx:xpx
+        this.selectedMosaic = "prx:xpx";
         return;
     }
 

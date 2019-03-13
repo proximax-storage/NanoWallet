@@ -25,11 +25,34 @@ class AttachMosaicCtrl {
             //// End dependencies region ////
 
             //// Component properties region ///
-
-           this.counter = 0;
            this.mosaicsMetaData = this._DataStore.mosaic.metaData;
 
-            //// End properties region ////
+            // Get current account
+            let acct = this.formData.isMultisig ? this.formData.multisigAccount.address : this._Wallet.currentAccount.address;
+
+            // Get the data of selected mosaic
+            let mosaic = this._DataStore.mosaic.ownedBy[acct][this.selectedMosaic];
+            console.log('Este es el mosaic', mosaic);
+
+            if (mosaic !== undefined) {
+                // Check if mosaic already present in mosaics array
+                let elem = $.grep(this.formData.mosaics, function(w) {
+                    return nem.utils.format.mosaicIdToName(mosaic.mosaicId) === nem.utils.format.mosaicIdToName(w.mosaicId);
+                });
+    
+                // If not present, update the array
+                if (elem.length === 0) {
+                    this.formData.mosaics.push({
+                        'mosaicId': mosaic['mosaicId'],
+                        'quantity': 0,
+                        'gid': 'mos_id_' + this.counter
+                    });
+                    // Update fee
+                    this.updateCtrl();
+                }
+            }
+            
+
 
         }
 
@@ -37,46 +60,48 @@ class AttachMosaicCtrl {
 
     //// Component methods region ////
 
-    /**
-     * Get selected mosaic and push it in mosaics array
-     */
-    attachMosaic() {
-        // increment counter 
-        this.counter++;
-        // Get current account
-        let acct = this.formData.isMultisig ? this.formData.multisigAccount.address : this._Wallet.currentAccount.address;
+    // /**
+    //  * Get selected mosaic and push it in mosaics array
+    //  */
+    // attachMosaic() {
+    //     // increment counter 
+    //     this.counter++;
+    //     // Get current account
+    //     let acct = this.formData.isMultisig ? this.formData.multisigAccount.address : this._Wallet.currentAccount.address;
 
-        // Get the data of selected mosaic
-        let mosaic = this._DataStore.mosaic.ownedBy[acct][this.selectedMosaic];
+    //     // Get the data of selected mosaic
+    //     let mosaic = this._DataStore.mosaic.ownedBy[acct][this.selectedMosaic];
+    //     console.log('Este es el mosaic', mosaic);
+        
 
-        // Check if mosaic already present in mosaics array
-        let elem = $.grep(this.formData.mosaics, function(w) {
-            return nem.utils.format.mosaicIdToName(mosaic.mosaicId) === nem.utils.format.mosaicIdToName(w.mosaicId);
-        });
+    //     // Check if mosaic already present in mosaics array
+    //     let elem = $.grep(this.formData.mosaics, function(w) {
+    //         return nem.utils.format.mosaicIdToName(mosaic.mosaicId) === nem.utils.format.mosaicIdToName(w.mosaicId);
+    //     });
 
-        // If not present, update the array
-        if (elem.length === 0) {
-            this.formData.mosaics.push({
-                'mosaicId': mosaic['mosaicId'],
-                'quantity': 0,
-                'gid': 'mos_id_' + this.counter
-            });
-            // Update fee
-            this.updateCtrl();
-        }
-    }
+    //     // If not present, update the array
+    //     if (elem.length === 0) {
+    //         this.formData.mosaics.push({
+    //             'mosaicId': mosaic['mosaicId'],
+    //             'quantity': 0,
+    //             'gid': 'mos_id_' + this.counter
+    //         });
+    //         // Update fee
+    //         this.updateCtrl();
+    //     }
+    // }
 
-    /**
-     * Remove a mosaic from mosaics array
-     * 
-     * @param {number} index - Index of the mosaic object in the array 
-     */
-    removeMosaic(index) {
-        this.formData.mosaics.splice(index, 1);
-        // Update the fee
-        this.updateCtrl();
-        return;
-    }
+    // /**
+    //  * Remove a mosaic from mosaics array
+    //  * 
+    //  * @param {number} index - Index of the mosaic object in the array 
+    //  */
+    // removeMosaic(index) {
+    //     this.formData.mosaics.splice(index, 1);
+    //     // Update the fee
+    //     this.updateCtrl();
+    //     return;
+    // }
 
     /**
      * Return an array of sorted keys

@@ -17,12 +17,14 @@ class BalanceCtrl {
         this._$filter = $filter;
 
         //// End dependencies region ////
+        this.balance = '0.0000';
+        this.currentAccountMosaicData = "";
 
         //// Component properties region ////
 
         this.markets = [];
         this.selectedMarket = this._DataStore.market.selected;
-        this.balance = '0.000000';
+        this.updateBalance();
 
         //// End properties region ////
 
@@ -33,29 +35,81 @@ class BalanceCtrl {
         }, true);
 
         // Deep watch market changes
-        $scope.$watch(() => this._DataStore.market, (val, oldVal) => {
-            if (!val || !val.btc || !val.xem) return;
-            // Ignore selected market changes
-            if (val.selected !== oldVal.selected) return;
-            this.arrangeMarkets()
-            this.updateBalance();
-        }, true);
+        // $scope.$watch(() => this._DataStore.market, (val, oldVal) => {
+        //     if (!val || !val.btc || !val.xem) return;
+        //     // Ignore selected market changes
+        //     if (val.selected !== oldVal.selected) return;
+        //     this.arrangeMarkets()
+        //     this.updateBalance();
+        // }, true);
     }
 
     //// Component methods region ////
+
+    // /**
+    //  * Calculate balance according to selected market
+    //  */
+    // computeBalance() {
+    //     if (undefined === this._DataStore.account.metaData) return;
+    //     if (this._DataStore.market.selected === 'XEM') {
+    //         this.balance = this._$filter("fmtNemValue")(this._DataStore.account.metaData.account.balance || 0)[0] + "." + this._$filter("fmtNemValue")(this._DataStore.account.metaData.account.balance || 0)[1];
+    //     } else if (this._DataStore.market.selected === 'BTC') {
+    //         this.balance = this._$filter("btcFormat")(this._DataStore.account.metaData.account.balance / 1000000 * this._DataStore.market.xem.highestBid);
+    //     } else {
+    //         this.balance = this._$filter("currencyFormat")(this._DataStore.account.metaData.account.balance / 1000000 * (this._DataStore.market.xem.highestBid * this._DataStore.market.btc[this.selectedMarket].last));
+    //     }
+    // }
 
     /**
      * Calculate balance according to selected market
      */
     computeBalance() {
         if (undefined === this._DataStore.account.metaData) return;
-        if (this._DataStore.market.selected === 'XEM') {
-            this.balance = this._$filter("fmtNemValue")(this._DataStore.account.metaData.account.balance || 0)[0] + "." + this._$filter("fmtNemValue")(this._DataStore.account.metaData.account.balance || 0)[1];
+        if (this._DataStore.market.selected === 'XPX') {
+            let acct = this._DataStore.account.metaData.account.address;
+
+            setTimeout(() => {
+                this.currentAccountMosaicData = undefined !== this._DataStore.mosaic.ownedBy[acct] ? this._DataStore.mosaic.ownedBy[acct]: "";
+                if (this.currentAccountMosaicData !== '') {
+                    if ('prx:xpx' in this.currentAccountMosaicData) {
+                        const element = this.currentAccountMosaicData['prx:xpx'];
+                        this.currentAccountMosaicData = {
+                            'prx:xpx': element
+                        }
+                    } else {
+                        this.currentAccountMosaicData = {
+                            'prx:xpx': {
+                                mosaicId: {
+                                    name: "xpx",
+                                    namespaceId: "prx"
+                                }
+                            }
+                        }
+                    }
+                }
+                this.balance = this.fmtAmountValue(this.currentAccountMosaicData['prx:xpx']['quantity']);
+            }, 500);            
         } else if (this._DataStore.market.selected === 'BTC') {
             this.balance = this._$filter("btcFormat")(this._DataStore.account.metaData.account.balance / 1000000 * this._DataStore.market.xem.highestBid);
         } else {
             this.balance = this._$filter("currencyFormat")(this._DataStore.account.metaData.account.balance / 1000000 * (this._DataStore.market.xem.highestBid * this._DataStore.market.btc[this.selectedMarket].last));
         }
+    }
+
+    /**
+     * Method to format xpx
+     * @param data
+     */
+    fmtAmountValue(data) {
+    if (data===null) { return }
+    if (!data) {
+        return "0.0000"
+    } else {
+        let a = data / 10000
+        let b = a.toFixed(4).split('.')
+        let r = b[0].split(/(?=(?:...)*$)/).join(" ")
+        return r + "." + b[1]
+    }
     }
 
     /**
@@ -74,6 +128,9 @@ class BalanceCtrl {
      */
     updateBalance(marketKey) {
         if (!marketKey) marketKey = this._DataStore.market.selected;
+
+        console.log("Esta es una pruebaaaaaa", marketKey);
+        
         this._$timeout(() => {
             this._DataStore.market.selected = marketKey;
             this.selectedMarket = marketKey;
