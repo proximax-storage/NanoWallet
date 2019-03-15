@@ -180,7 +180,7 @@ function EnglishProvider($translateProvider) {
         TRANSFER_TRANSACTION_INVOICE: 'Create invoice',
         TRANSFER_TRANSACTION_TAB_INVOICE: 'Receive',
         TRANSFER_TRANSACTION_MOSAIC_TRANSFER: 'Mosaic transfer',
-        TRANSFER_TRANSACTION_ATTACH_MOSAIC: 'Mosaic',
+        TRANSFER_TRANSACTION_ATTACH_MOSAIC: 'Mosaics',
         TRANSFER_TRANSACTION_ATTACH: 'Attach',
         TRANSFER_TRANSACTION_MOSAICS_ATTACHED: 'Mosaics attached',
         TRANSFER_TRANSACTION_ENCRYPT_MESSAGE: 'Encrypt message',

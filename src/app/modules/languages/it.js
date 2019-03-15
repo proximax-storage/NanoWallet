@@ -177,7 +177,7 @@ function ItalianProvider($translateProvider) {
         TRANSFER_TRANSACTION_INVOICE: 'Crea fattura',
         TRANSFER_TRANSACTION_TAB_INVOICE: 'Per ricevere',
         TRANSFER_TRANSACTION_MOSAIC_TRANSFER: 'Trasferimento del mosaico',
-        TRANSFER_TRANSACTION_ATTACH_MOSAIC: 'Mosaico',
+        TRANSFER_TRANSACTION_ATTACH_MOSAIC: 'Mosaicos',
         TRANSFER_TRANSACTION_ATTACH: 'allegare',
         TRANSFER_TRANSACTION_MOSAICS_ATTACHED: 'Mosaici allegati',
         TRANSFER_TRANSACTION_ENCRYPT_MESSAGE: 'Crittografare il messaggio',

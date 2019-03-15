@@ -75,7 +75,7 @@ class DataStore {
         this.market = {
             xem: undefined,
             btc: undefined,
-            selected: 'XPX'
+            selected: 'XPX',
         }
     }
 

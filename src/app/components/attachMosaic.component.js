@@ -26,29 +26,34 @@ class AttachMosaicCtrl {
 
             //// Component properties region ///
            this.mosaicsMetaData = this._DataStore.mosaic.metaData;
+           this.counter = 0;
+           this.first = true;
 
             // Get current account
             let acct = this.formData.isMultisig ? this.formData.multisigAccount.address : this._Wallet.currentAccount.address;
 
-            // Get the data of selected mosaic
+            // Get the data of selected mosaic            
             let mosaic = this._DataStore.mosaic.ownedBy[acct][this.selectedMosaic];
             console.log('Este es el mosaic', mosaic);
 
             if (mosaic !== undefined) {
-                // Check if mosaic already present in mosaics array
-                let elem = $.grep(this.formData.mosaics, function(w) {
-                    return nem.utils.format.mosaicIdToName(mosaic.mosaicId) === nem.utils.format.mosaicIdToName(w.mosaicId);
-                });
-    
-                // If not present, update the array
-                if (elem.length === 0) {
-                    this.formData.mosaics.push({
-                        'mosaicId': mosaic['mosaicId'],
-                        'quantity': 0,
-                        'gid': 'mos_id_' + this.counter
+                if ('quantity' in mosaic) {
+                    this.counter++;
+                    // Check if mosaic already present in mosaics array
+                    let elem = $.grep(this.formData.mosaics, function(w) {
+                        return nem.utils.format.mosaicIdToName(mosaic.mosaicId) === nem.utils.format.mosaicIdToName(w.mosaicId);
                     });
-                    // Update fee
-                    this.updateCtrl();
+        
+                    // If not present, update the array
+                    if (elem.length === 0) {
+                        this.formData.mosaics.push({
+                            'mosaicId': mosaic['mosaicId'],
+                            'quantity': 0,
+                            'gid': 'mos_id_' + this.counter
+                        });
+                        // Update fee
+                        this.updateCtrl();
+                    }
                 }
             }
             
@@ -60,48 +65,58 @@ class AttachMosaicCtrl {
 
     //// Component methods region ////
 
-    // /**
-    //  * Get selected mosaic and push it in mosaics array
-    //  */
-    // attachMosaic() {
-    //     // increment counter 
-    //     this.counter++;
-    //     // Get current account
-    //     let acct = this.formData.isMultisig ? this.formData.multisigAccount.address : this._Wallet.currentAccount.address;
+    /**
+     * Get selected mosaic and push it in mosaics array
+     */
+    attachMosaic() {
+        this.first = false;
+        // increment counter 
+        this.counter++;
+        // Get current account
+        let acct = this.formData.isMultisig ? this.formData.multisigAccount.address : this._Wallet.currentAccount.address;
 
-    //     // Get the data of selected mosaic
-    //     let mosaic = this._DataStore.mosaic.ownedBy[acct][this.selectedMosaic];
-    //     console.log('Este es el mosaic', mosaic);
+        // Get the data of selected mosaic
+        let mosaic = this._DataStore.mosaic.ownedBy[acct][this.selectedMosaic];
+        console.log('Este es el mosaic', mosaic);
         
 
-    //     // Check if mosaic already present in mosaics array
-    //     let elem = $.grep(this.formData.mosaics, function(w) {
-    //         return nem.utils.format.mosaicIdToName(mosaic.mosaicId) === nem.utils.format.mosaicIdToName(w.mosaicId);
-    //     });
+        // Check if mosaic already present in mosaics array
+        let elem = $.grep(this.formData.mosaics, function(w) {
+            return nem.utils.format.mosaicIdToName(mosaic.mosaicId) === nem.utils.format.mosaicIdToName(w.mosaicId);
+        });
 
-    //     // If not present, update the array
-    //     if (elem.length === 0) {
-    //         this.formData.mosaics.push({
-    //             'mosaicId': mosaic['mosaicId'],
-    //             'quantity': 0,
-    //             'gid': 'mos_id_' + this.counter
-    //         });
-    //         // Update fee
-    //         this.updateCtrl();
-    //     }
-    // }
+        // If not present, update the array
+        if (elem.length === 0) {
+            this.formData.mosaics.push({
+                'mosaicId': mosaic['mosaicId'],
+                'quantity': 0,
+                'gid': 'mos_id_' + this.counter
+            });
+            // Update fee
+            this.updateCtrl();
+        }
+    }
 
-    // /**
-    //  * Remove a mosaic from mosaics array
-    //  * 
-    //  * @param {number} index - Index of the mosaic object in the array 
-    //  */
-    // removeMosaic(index) {
-    //     this.formData.mosaics.splice(index, 1);
-    //     // Update the fee
-    //     this.updateCtrl();
-    //     return;
-    // }
+    changeMosaic () {
+        console.log("CAMBIOOOOOOOOOOOOOOOOOO");
+        
+        if (this.first) {
+            this.removeMosaic(0);
+            this.attachMosaic();
+        }
+    }
+
+    /**
+     * Remove a mosaic from mosaics array
+     * 
+     * @param {number} index - Index of the mosaic object in the array 
+     */
+    removeMosaic(index) {
+        this.formData.mosaics.splice(index, 1);
+        // Update the fee
+        this.updateCtrl();
+        return;
+    }
 
     /**
      * Return an array of sorted keys

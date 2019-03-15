@@ -4,19 +4,19 @@
   </div>
   <div class="panel-body">
     <!-- MOSAIC SELECT -->
-    <!-- <fieldset class="form-group">
+    <fieldset class="form-group">
       <div class="input-group">
         <span class="input-group-btn">
           <label class="control-label">{{ 'GENERAL_CURRENCY' | translate }}: </label>
         </span>
-        <select class="col-sm-7 form-control" ng-options="mosaicName for mosaicName in $ctrl.toSortedKeys($ctrl.accountMosaics)" ng-model="$ctrl.selectedMosaic" required="required" id="mosaic"></select>
+        <select class="col-sm-7 form-control" ng-options="mosaicName for mosaicName in $ctrl.toSortedKeys($ctrl.accountMosaics)" ng-model="$ctrl.selectedMosaic" ng-change="$ctrl.changeMosaic()" required="required" id="mosaic"></select>
         <span class="input-group-btn">
           <button type="button" class="btn btn-success" ng-click="$ctrl.attachMosaic()">{{ 'TRANSFER_TRANSACTION_ATTACH' | translate }}</button>
         </span>
       </div>
-    </fieldset> -->
+    </fieldset>
     <!-- MOSAIC BALANCE -->
-    <div class="form-group" ng-show="$ctrl.selectedMosaic === 'prx:xpx' && $ctrl.accountMosaics[$ctrl.selectedMosaic].quantity !== undefined">
+    <div class="form-group" ng-show="$ctrl.accountMosaics[$ctrl.selectedMosaic].quantity !== undefined">
       <div class="input-group">
         <span class="input-group-btn">
           <label>{{'FORM_SIDE_BTN_BALANCE' | translate}}: </label>
@@ -34,7 +34,7 @@
           <label>{{'FORM_SIDE_BTN_BALANCE' | translate}}: </label>
         </span>
         <div class="form-control formFloat" disabled>
-          <input class="readOnly mosaic" type="text" value="0" readOnly/>
+          <input class="readOnly mosaic" type="text" value="0.0000" readOnly/>
           <label class="floatRight"><small>{{$ctrl.accountMosaics[$ctrl.selectedMosaic].mosaicId.name}}</small></label>
         </div>
       </div>
@@ -43,9 +43,9 @@
 </div>
 
 <div class="mosaic col-lg-6 col-md-12">
-  <!-- <div class="panel-heading">
+  <div class="panel-heading">
     <h3>{{ 'TRANSFER_TRANSACTION_MOSAICS_ATTACHED' | translate }}</h3>
-  </div> -->
+  </div>
   <!-- NEW MOSAIC DISPLAY -->
   <div class="panel-body" ng-show="$ctrl.formData.mosaics.length" ng-repeat="mos in $ctrl.formData.mosaics">
     <!-- ATTACHED MOSAIC NAME -->
@@ -55,9 +55,9 @@
           <label>{{ 'GENERAL_MOSAIC' | translate }}: </label>
         </span>
         <input type="text" class="form-control" value="{{mos.mosaicId.namespaceId}}:{{mos.mosaicId.name}}" readOnly />
-        <!-- <span class="input-group-btn">
+        <span class="input-group-btn">
           <button type="button" class="btn btn-success mosaics" ng-click="$ctrl.removeMosaic($index)">{{ 'GENERAL_REMOVE' | translate }}</button>
-        </span> -->
+        </span>
       </div>
     </fieldset>
     <!-- ATTACHED MOSAIC AMOUNT TO SEND -->

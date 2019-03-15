@@ -41,7 +41,7 @@ class TransferTransactionCtrl {
         // Switch between mosaic transfer and normal transfers
         this.isMosaicTransfer = true;
         // Selected mosaic
-        this.selectedMosaic = "nem:xem";
+        this.selectedMosaic = "prx:xpx";
         // Mosaics data for current account
         this.currentAccountMosaicData = "";
         // Prevent user to click twice on send when already processing
@@ -155,20 +155,13 @@ class TransferTransactionCtrl {
         // Set current account mosaics names and data, if account owns any
         this.currentAccountMosaicData = undefined !== this._DataStore.mosaic.ownedBy[acct] ? this._DataStore.mosaic.ownedBy[acct]: "";
 
-        if ('prx:xpx' in this.currentAccountMosaicData) {
-            const element = this.currentAccountMosaicData['prx:xpx'];
-            this.currentAccountMosaicData = {
-                'prx:xpx': element
-            }
-        } else {
-            this.currentAccountMosaicData = {
-                'prx:xpx': {
-                    mosaicId: {
-                        name: "xpx",
-                        namespaceId: "prx"
-                    }
+        if (!('prx:xpx' in this.currentAccountMosaicData)) {
+            this.currentAccountMosaicData['prx:xpx'] = {
+                mosaicId: {
+                    name: "xpx",
+                    namespaceId: "prx"
                 }
-            }
+            };
         }
         
         // Default selected is prx:xpx

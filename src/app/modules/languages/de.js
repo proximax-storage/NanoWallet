@@ -177,7 +177,7 @@ function GermanProvider($translateProvider) {
         TRANSFER_TRANSACTION_INVOICE: 'Rechnung erstellen',
         TRANSFER_TRANSACTION_TAB_INVOICE: 'Empfangen',
         TRANSFER_TRANSACTION_MOSAIC_TRANSFER: 'Mosaik transferieren',
-        TRANSFER_TRANSACTION_ATTACH_MOSAIC: 'Mosaik',
+        TRANSFER_TRANSACTION_ATTACH_MOSAIC: 'Mosaiks',
         TRANSFER_TRANSACTION_ATTACH: 'Anhang',
         TRANSFER_TRANSACTION_MOSAICS_ATTACHED: 'Mosaik angehängt',
         TRANSFER_TRANSACTION_ENCRYPT_MESSAGE: 'Nachricht verschlüsseln',
