@@ -34,7 +34,7 @@
           <label>{{'FORM_SIDE_BTN_BALANCE' | translate}}: </label>
         </span>
         <div class="form-control formFloat" disabled>
-          <input class="readOnly mosaic" type="text" value="0.0000" readOnly/>
+          <input class="readOnly mosaic" type="text" value="{{$ctrl.quantityXPX}}" readOnly/>
           <label class="floatRight"><small>{{$ctrl.accountMosaics[$ctrl.selectedMosaic].mosaicId.name}}</small></label>
         </div>
       </div>

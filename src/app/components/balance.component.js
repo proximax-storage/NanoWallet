@@ -7,18 +7,23 @@ class BalanceCtrl {
      *
      * @params {services} - Angular services to inject
      */
-    constructor(DataStore, $filter, $timeout, $scope) {
+    constructor(DataStore, $filter, $timeout, $scope, Wallet) {
         'ngInject';
 
         //// Component dependencies region ////
-        
+        this._Wallet = Wallet;        
         this._DataStore = DataStore;
         this._$timeout = $timeout;
         this._$filter = $filter;
 
         //// End dependencies region ////
-        this.balance = '0.0000';
-        this.balanceXEM = '0.000000';
+        if (this._Wallet.network == nem.model.network.data.mainnet.id) {
+            this.balance = '0.0000';
+            this.balanceXEM = '0.000000';
+        } else if (this._Wallet.network == nem.model.network.data.testnet.id) {
+            this.balance = '0.000000';
+            this.balanceXEM = '0.000000';
+        }
         this.currentAccountMosaicData = "";
 
         //// Component properties region ////
@@ -31,14 +36,11 @@ class BalanceCtrl {
         $scope.$watch(() => this._DataStore.mosaic.metaData, (val) => {
             if (!val) return;
             this.updateBalance();
-            console.log("ESTE ES EL VALLLLL", val);
-
         }, true);
         
         $scope.$watch(() => this._DataStore.account.transactions.confirmed, (val) => {
             if (!val) return;
             setTimeout(() => {
-                console.log("ESTE ES EL Confirmed", val);
                 this.updateBalance();
             }, 1000);
         }, true);
@@ -73,7 +75,11 @@ class BalanceCtrl {
                         }
                     };
                 }
-                this.balance = this.fmtAmountValue(this.currentAccountMosaicData['prx:xpx']['quantity']);
+                if (this._Wallet.network == nem.model.network.data.mainnet.id) {
+                    this.balance = this.fmtAmountMainValue(this.currentAccountMosaicData['prx:xpx']['quantity']);
+                } else if (this._Wallet.network == nem.model.network.data.testnet.id) {
+                    this.balance = this.fmtAmountTestValue(this.currentAccountMosaicData['prx:xpx']['quantity']);
+                }
             };
         } 
     }
@@ -82,17 +88,33 @@ class BalanceCtrl {
      * Method to format xpx
      * @param data
      */
-    fmtAmountValue(data) {
+    fmtAmountTestValue(data) {
     if (data===null) { return }
-    if (!data) {
-        return "0.0000"
-    } else {
-        let a = data / 10000
-        let b = a.toFixed(4).split('.')
-        let r = b[0].split(/(?=(?:...)*$)/).join(" ")
-        return r + "." + b[1]
+        if (!data) {
+            return "0.0000"
+        } else {
+            let a = data / 10000
+            let b = a.toFixed(4).split('.')
+            let r = b[0].split(/(?=(?:...)*$)/).join(" ")
+            return r + "." + b[1]
+        }
     }
-    }
+
+    /**
+     * Method to format xpx
+     * @param data
+     */
+    fmtAmountMainValue(data) {
+        if (data===null) { return }
+            if (!data) {
+                return "0.000000"
+            } else {
+                let a = data / 1000000
+                let b = a.toFixed(6).split('.')
+                let r = b[0].split(/(?=(?:...)*$)/).join(" ")
+                return r + "." + b[1]
+            }
+        }
 
     /**
      * Arrange the array of market keys
@@ -109,10 +131,13 @@ class BalanceCtrl {
      * @param {string} marketKey - A market key
      */
     updateBalance(marketKey) {
-        this.balance = '0.0000';
+        if (this._Wallet.network == nem.model.network.data.mainnet.id) {
+            this.balance = '0.000000';
+        } else if (this._Wallet.network == nem.model.network.data.testnet.id) {
+            this.balance = '0.0000';
+        }
         this.balanceXEM = '0.000000';
         if (!marketKey) marketKey = this._DataStore.market.selected;
-        console.log("Esta es una pruebaaaaaa", marketKey);
         
         this._$timeout(() => {
             this._DataStore.market.selected = marketKey;

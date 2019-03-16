@@ -21,14 +21,18 @@ class AttachMosaicCtrl {
             this._$timeout = $timeout;
             this._Wallet = Wallet;
             this._DataStore = DataStore;
-
+            
             //// End dependencies region ////
-
+            
             //// Component properties region ///
-           this.mosaicsMetaData = this._DataStore.mosaic.metaData;
-           this.counter = 0;
-           this.first = true;
-
+            this.mosaicsMetaData = this._DataStore.mosaic.metaData;
+            this.counter = 0;
+            this.first = true;
+            if (this._Wallet.network == nem.model.network.data.mainnet.id) {
+                this.quantityXPX = '0.000000';
+            } else if (this._Wallet.network == nem.model.network.data.testnet.id) {
+                this.quantityXPX = '0.0000';
+            }
             // Get current account
             let acct = this.formData.isMultisig ? this.formData.multisigAccount.address : this._Wallet.currentAccount.address;
 
@@ -98,8 +102,6 @@ class AttachMosaicCtrl {
     }
 
     changeMosaic () {
-        console.log("CAMBIOOOOOOOOOOOOOOOOOO");
-        
         if (this.first) {
             this.removeMosaic(0);
             this.attachMosaic();
